@@ -24,7 +24,7 @@ pipeline {
 
         stage('Build Docker image') {
             steps {
-                sh "docker build ."
+                sh "docker build --build-arg TOMCAT_PORT=8000 ."
             }
         }
 
