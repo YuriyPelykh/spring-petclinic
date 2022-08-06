@@ -17,7 +17,7 @@ pipeline {
 
         stage('Pre-build Testing-DB creation') {
             steps {
-                sh "docker-copmpose up -d mysql"
+                sh "docker-compose up -d mysql"
                 echo "Stage in development..."
             }
         }
