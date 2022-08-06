@@ -28,13 +28,13 @@ pipeline {
             }
         }
 
-        stage('Post-build config') {
+        stage('Post-build DB destroy') {
             steps {
-                echo "Stage in development..."
+                sh "docker-compose down --rmi --volume mysql"
             }
         }
 
-        stage('Push image into repository') {
+        stage('Push image to repository') {
             steps {
                 echo "Stage in development..."
             }
