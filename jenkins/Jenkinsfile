@@ -31,7 +31,6 @@ pipeline {
                     returnStdout: true
                     ).trim()
                 }
-
                 echo "IP-address of DB container: ${DB_IP}"
             }
         }
@@ -39,7 +38,10 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 sh "docker volume create --name maven-repo; \
-                    docker build --build-arg TOMCAT_PORT=8000 --add-host=mysql:${DB_IP} ."
+                    docker build --tag spring_petclinic:${BUILD_NUMBER} \
+                                 --tag spring_petclinic:latest \
+                                 --build-arg TOMCAT_PORT=8000 \
+                                 --add-host=mysql:${DB_IP} ."
             }
         }
 
