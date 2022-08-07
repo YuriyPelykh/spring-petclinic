@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     DB_CONTAINER_NAME = sh (
-                    script: 'docker-compose up -d mysql | grep done | cut -d" " -f2',
+                    script: "docker-compose up -d mysql | grep 'done' | cut -d' ' -f2",
                     returnStdout: true
                     ).trim()
 
