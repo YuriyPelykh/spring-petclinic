@@ -19,16 +19,18 @@ pipeline {
             steps {
                 script {
                     DB_CONTAINER_NAME = sh (
-                    script: 'docker-compose up -d mysql | grep done | cut -d" " -f2 ',
+                    script: 'docker-compose up -d mysql | grep done | cut -d" " -f2',
                     returnStdout: true
                     ).trim()
-                }
-                script {
+
+                    echo "Name of DB container: ${DB_CONTAINER_NAME}"
+
                     DB_IP = sh (
                     script: 'docker inspect -f "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}" ${DB_CONTAINER_NAME}',
                     returnStdout: true
                     ).trim()
                 }
+
                 echo "IP-address of DB container: ${DB_IP}"
             }
         }
