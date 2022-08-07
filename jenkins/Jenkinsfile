@@ -42,6 +42,7 @@ pipeline {
                                  --tag yuriypelykh/petclinic:latest \
                                  --build-arg TOMCAT_PORT=8000 \
                                  --network=\$(echo \"${JOB_NAME}\"_default | tr '[:upper:]' '[:lower:]' | tr -d ' ') \
+                                 --mount source=maven-repo,destination=/root/.m2 \
                                  ."
             }
         }
