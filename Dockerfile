@@ -1,7 +1,7 @@
 FROM maven:3.8.1-adoptopenjdk-11 as mvn-package
 RUN mkdir "${PWD}/app"
 COPY ${WORKSPACE}/ ${PWD}/app
-COPY /var/lib/docker/volumes/maven-repo/maven-repo/_data/ /root/.m2
+COPY /home/vagrant/maven-repo/_data/ /root/.m2
 RUN cd /app \
     && mvn package \
     && ls -lah \
