@@ -1,4 +1,5 @@
 FROM maven:3.8.1-adoptopenjdk-11 as mvn-package
+VOLUME maven-repo /root/.m2
 RUN echo "${PWD}"  \
     && mkdir "${PWD}/app"
 COPY ${WORKSPACE}/ ${PWD}/app

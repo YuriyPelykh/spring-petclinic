@@ -20,7 +20,7 @@ pipeline {
                 sh "docker-compose up -d mysql"
                 script {
                     DB_CONTAINER_NAME = sh (
-                    script: "echo \"${JOB_NAME}\"_mysql_1",
+                    script: "echo \"${JOB_NAME}\"_mysql_1 | tr '[:upper:]' '[:lower:]' | tr -d ' '",
                     returnStdout: true
                     ).trim()
 
@@ -38,13 +38,8 @@ pipeline {
 
         stage('Build Docker image') {
             steps {
-                sh "docker build --build-arg TOMCAT_PORT=8000 --add-host=mysql:${DB_IP} ."
-            }
-        }
-
-        stage('Post-build DB destroy') {
-            steps {
-                sh "docker-compose down --volumes"
+                sh "docker volume create --name maven-repo; \
+                    docker build --build-arg TOMCAT_PORT=8000 --add-host=mysql:${DB_IP} ."
             }
         }
 
