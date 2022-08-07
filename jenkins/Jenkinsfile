@@ -17,9 +17,10 @@ pipeline {
 
         stage('Pre-build Testing-DB creation') {
             steps {
+                sh "docker-compose up -d mysql"
                 script {
                     DB_CONTAINER_NAME = sh (
-                    script: "docker-compose up -d mysql | grep 'done' | cut -d' ' -f2",
+                    script: "echo \"${JOB_NAME}\"_mysql_1",
                     returnStdout: true
                     ).trim()
 
