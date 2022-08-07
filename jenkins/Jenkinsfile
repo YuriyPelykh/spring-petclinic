@@ -27,7 +27,7 @@ pipeline {
                     echo "Name of DB container: ${DB_CONTAINER_NAME}"
 
                     DB_IP = sh (
-                    script: 'docker inspect -f "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}" ${DB_CONTAINER_NAME}',
+                    script: "docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${DB_CONTAINER_NAME}",
                     returnStdout: true
                     ).trim()
                 }
