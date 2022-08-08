@@ -1,14 +1,14 @@
 FROM maven:3.8.1-adoptopenjdk-11 as mvn-package
-RUN mkdir "${PWD}/app"
-COPY ${WORKSPACE}/ ${PWD}/app
-RUN cd /app \
-    && --mount=type=cache,target=/root/.m2 mvn clean package \
-    && ls -lah \
-    && ls -lah target
+ENV HOME=/usr/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+ADD pom.xml $HOME
+RUN mvn verify --fail-never
+ADD . $HOME
+RUN mvn package
 
-FROM openjdk:11
+FROM openjdk:11-jre-slim
 ARG TOMCAT_PORT
-RUN mkdir "${PWD}/app"
-COPY --from=mvn-package ./app/target/*.jar ${PWD}/app
-CMD ["java", "-jar", "${PWD}/app/*.jar"]
+COPY --from=mvn-package /usr/app/target/*.jar /app
 EXPOSE ${TOMCAT_PORT}
+ENTRYPOINT java -jar /app/*.jar

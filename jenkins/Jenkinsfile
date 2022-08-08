@@ -1,4 +1,10 @@
 pipeline {
+    environment {
+//        registry = "YourDockerhubAccount/YourRepository"
+//        registryCredential = 'dockerhub_id'
+//        dockerImage = ''
+        TOMCAT_PORT = 8000
+    }
     agent any
     stages {
         stage('Clone repo from main') {
@@ -40,7 +46,7 @@ pipeline {
                 sh "docker volume create --name maven-repo; \
                     docker build --tag yuriypelykh/petclinic:\"${BUILD_NUMBER}\" \
                                  --tag yuriypelykh/petclinic:latest \
-                                 --build-arg TOMCAT_PORT=8000 \
+                                 --build-arg TOMCAT_PORT=${TOMCAT_PORT} \
                                  --network=\$(echo \"${JOB_NAME}\"_default | tr '[:upper:]' '[:lower:]' | tr -d ' ') \
                                  ."
             }
