@@ -2,7 +2,7 @@ FROM maven:3.8.1-adoptopenjdk-11 as mvn-package
 RUN mkdir "${PWD}/app"
 COPY ${WORKSPACE}/ ${PWD}/app
 RUN cd /app \
-    && mvn package \
+    && --mount=type=cache,target=/root/.m2 mvn clean package \
     && ls -lah \
     && ls -lah target
 

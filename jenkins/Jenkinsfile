@@ -38,7 +38,7 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 sh "docker volume create --name maven-repo; \
-                    docker build --tag yuriypelykh/petclinic:\"${BUILD_NUMBER}\" \
+                    DOCKER_BUILDKIT=1 docker build --tag yuriypelykh/petclinic:\"${BUILD_NUMBER}\" \
                                  --tag yuriypelykh/petclinic:latest \
                                  --build-arg TOMCAT_PORT=8000 \
                                  --network=\$(echo \"${JOB_NAME}\"_default | tr '[:upper:]' '[:lower:]' | tr -d ' ') \
