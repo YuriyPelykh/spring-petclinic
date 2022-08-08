@@ -32,8 +32,8 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 sh "docker volume create --name maven-repo; \
-                    docker build --tag \"${DOCKER_HUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":\"${BUILD_NUMBER}\" \
-                                 --tag \"${DOCKER_HUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":latest \
+                    docker build --tag \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":\"${BUILD_NUMBER}\" \
+                                 --tag \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":latest \
                                  --build-arg TOMCAT_PORT=${TOMCAT_PORT} \
                                  --network=\$(echo \"${JOB_NAME}\"_default | tr '[:upper:]' '[:lower:]' | tr -d ' ') \
                                  ."
