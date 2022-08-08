@@ -21,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Pre-build actions: Test-DB creation') {
+        stage('DB creation for Unit-tests') {
             steps {
                 sh "docker-compose up -d mysql"
             }
@@ -34,6 +34,7 @@ pipeline {
                                  --tag \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":latest \
                                  --build-arg TOMCAT_PORT=${TOMCAT_PORT} \
                                  --network=\$(echo \"${JOB_NAME}\"_default | tr '[:upper:]' '[:lower:]' | tr -d ' ') \
+                                 --label \"${DOCKER_IMAGE_NAME}\" \
                                  ."
             }
         }
@@ -46,15 +47,17 @@ pipeline {
             }
         }
 
-        stage('Post-actions: Destroy Test-DB') {
+        stage('Destroy test-DB') {
             steps {
                 sh "docker-compose down"
             }
         }
 
-        stage('Post-actions: Cleaning') {
+        stage('Cleaning') {
             steps {
-                echo "Cleaning..."
+                echo "Removing old images..."
+                sh "docker image prune --all --force --filter \"until=2h\" --filter \"label=\"${DOCKER_IMAGE_NAME}\"\" \
+                    docker rmi \$(docker images --filter \"dangling=true\" -q)"
             }
         }
     }
