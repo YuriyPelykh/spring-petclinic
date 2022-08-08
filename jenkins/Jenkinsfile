@@ -27,6 +27,7 @@ pipeline {
             steps {
                 sh "docker-compose up -d mysql"
             }
+        }
 
         stage('Build Docker image') {
             steps {
