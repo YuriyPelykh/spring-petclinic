@@ -9,6 +9,8 @@ RUN mvn package
 
 FROM openjdk:11-jre-slim
 ARG TOMCAT_PORT
-COPY --from=mvn-package /usr/app/target/*.jar /app
+COPY --from=mvn-package /usr/app/target/*.jar /app/app.jar
+RUN ls -lah \
+    && ls -lah /app
 EXPOSE ${TOMCAT_PORT}
-ENTRYPOINT java -jar /app/*.jar
+ENTRYPOINT java -jar /app/app.jar

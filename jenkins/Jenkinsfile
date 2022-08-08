@@ -4,6 +4,8 @@ pipeline {
 //        registryCredential = 'dockerhub_id'
 //        dockerImage = ''
         TOMCAT_PORT = 8000
+        DOCKERHUB_REPO = "yuriypelykh"
+        DOCKER_IMAGE_NAME = "petclinic"
     }
     agent any
     stages {
@@ -24,28 +26,13 @@ pipeline {
         stage('Pre-build Testing-DB creation') {
             steps {
                 sh "docker-compose up -d mysql"
-                script {
-                    DB_CONTAINER_NAME = sh (
-                    script: "echo \"${JOB_NAME}\"_mysql_1 | tr '[:upper:]' '[:lower:]' | tr -d ' '",
-                    returnStdout: true
-                    ).trim()
-
-                    echo "Name of DB container: ${DB_CONTAINER_NAME}"
-
-                    DB_IP = sh (
-                    script: "docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${DB_CONTAINER_NAME}",
-                    returnStdout: true
-                    ).trim()
-                }
-                echo "IP-address of DB container: ${DB_IP}"
             }
-        }
 
         stage('Build Docker image') {
             steps {
                 sh "docker volume create --name maven-repo; \
-                    docker build --tag yuriypelykh/petclinic:\"${BUILD_NUMBER}\" \
-                                 --tag yuriypelykh/petclinic:latest \
+                    docker build --tag \"${DOCKER_HUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":\"${BUILD_NUMBER}\" \
+                                 --tag \"${DOCKER_HUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":latest \
                                  --build-arg TOMCAT_PORT=${TOMCAT_PORT} \
                                  --network=\$(echo \"${JOB_NAME}\"_default | tr '[:upper:]' '[:lower:]' | tr -d ' ') \
                                  ."
