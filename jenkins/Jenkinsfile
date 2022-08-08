@@ -21,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Pre-build Testing-DB creation') {
+        stage('Pre-build actions: Test-DB creation') {
             steps {
                 sh "docker-compose up -d mysql"
             }
@@ -40,16 +40,22 @@ pipeline {
 
         stage('Push image to registry') {
             steps {
-                sh "echo \"${DOCKERHUB_CREDENTIALS_PSW}\" | docker login -u \"${DOCKERHUB_CREDENTIALS_USR}\" --password-stdin
-                    docker push \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":\"${BUILD_NUMBER}\"
+                sh "echo \"${DOCKERHUB_CREDENTIALS_PSW}\" | docker login -u \"${DOCKERHUB_CREDENTIALS_USR}\" --password-stdin; \
+                    docker push \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":\"${BUILD_NUMBER}\"; \
                     docker push \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":latest"
             }
         }
-    }
 
-    post {
-        always {
-            sh "docker-compose down"
+        stage('Post-actions: Destroy Test-DB') {
+            steps {
+                sh "docker-compose down"
+            }
+        }
+
+        stage('Post-actions: Cleaning') {
+            steps {
+                echo "Cleaning..."
+            }
         }
     }
 }
