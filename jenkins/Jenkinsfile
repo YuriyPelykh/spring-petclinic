@@ -56,7 +56,7 @@ pipeline {
         stage('Cleaning') {
             steps {
                 echo "Removing old images..."
-                sh "docker image prune --all --force --filter \"until=2h\" --filter \"label=\"${DOCKER_IMAGE_NAME}\"\" \
+                sh "docker image prune --all --force --filter \"until=2h\" --filter \"label=\"${DOCKER_IMAGE_NAME}\"\"; \
                     docker rmi \$(docker images --filter \"dangling=true\" -q)"
             }
         }
