@@ -1,11 +1,9 @@
 pipeline {
     environment {
-//        registry = "YourDockerhubAccount/YourRepository"
-//        registryCredential = 'dockerhub_id'
-//        dockerImage = ''
         TOMCAT_PORT = 8000
-        DOCKERHUB_REPO = "yuriypelykh"
         DOCKER_IMAGE_NAME = "petclinic"
+        DOCKERHUB_REPO = "yuriypelykh"
+        DOCKERHUB_CREDENTIALS=credentials('dockerhub_cred')
     }
     agent any
     stages {
@@ -40,9 +38,11 @@ pipeline {
             }
         }
 
-        stage('Push image to repository') {
+        stage('Push image to registry') {
             steps {
-                echo "Stage in development..."
+                sh "echo \"${DOCKERHUB_CREDENTIALS_PSW}\" | docker login -u \"${DOCKERHUB_CREDENTIALS_USR}\" --password-stdin
+                    docker push \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":\"${BUILD_NUMBER}\"
+                    docker push \"${DOCKERHUB_REPO}\"/\"${DOCKER_IMAGE_NAME}\":latest"
             }
         }
     }
