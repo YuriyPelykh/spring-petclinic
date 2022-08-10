@@ -4,8 +4,8 @@ pipeline {
         stage('Clone repo from feature branch') {
             steps {
                 git branch: "${BRANCH_NAME}",
-                    credentialsId: 'GitHub_SSH_Key_jenkins',
-                    url: 'git@github.com:YuriyPelykh/spring-petclinic.git'
+                    credentialsId: 'MyGitLab_SSH_Key',
+                    url: 'git@git.my.net:yuriipelykh/spring-petclinic.git'
                 sh "ls -lat"
             }
         }
